@@ -5,8 +5,9 @@ Made by : Pongsapat Boonpong
 
 byte Base10Sum1;
 byte Base10Sum2;
+byte Base10Result;
 
-
+/*
 //Input pins
 int Input1 = 2;
 int Input2 = 3;
@@ -14,6 +15,7 @@ int Input3 = 4;
 int Input4 = 5;
 int Input5 = 6;
 int Input6 = 7;
+*/
 
 //Output pins
 int Output1 = 8;
@@ -24,15 +26,17 @@ int Output4 = 11;
 //Modes
 int SummaryMode = 12;
 int SubtractMode = 13;
+bool Mode; //if true = sum mode, if false = subtract mode
 
 void setup() {
+  /*
   pinMode(input1, INPUT);
   pinMode(input2, INPUT);
   pinMode(input3, INPUT);
   pinMode(input4, INPUT);
   pinMode(input5, INPUT);
   pinMode(input6, INPUT);
-
+  */
   pinMode(Output1, OUTPUT);
   pinMode(Output2, OUTPUT); 
   pinMode(Output3, OUTPUT); 
@@ -44,6 +48,46 @@ void setup() {
 }
 
 void loop() {
-  
 
+  //Get input from the calculator
+  for (int i = 0; i <= 2; i++){
+    Base10Sum1 += digitalRead(i+2)^i;
+    Base10Sum2 += digitalRead(i+5)^i;
+  }
+
+  //Show results on serial monitor
+  Serial.print("Set 1 : " + Base10Sum1);
+  Serial.print("Set 2 : " + Base10Sum2);
+
+  //Select mode
+  if (digitalRead(SummaryMode == 1){
+    Serial.print("Mode : Summation")
+    Mode = true;
+  }
+  else if (digitalRead(SubtractMode == 1){
+    Serial.print("Mode : Subtraction")
+    Mode = false;
+  }
+
+  //Calculation
+  if (Mode == true){
+   //Calculation summmation 
+   Base10Result = Base10Sum1 + Base10Sum2;
+   Serial.print("Summation result : " + Base10Result);
+   
+  }
+  else{
+    //Calculate subtraction  
+    Base10Result = Base10Sum1 - Base10Sum2;
+    Serial.print("Subtraction result : " + Base10Result);
+    if (Base10Result < 0){
+      delay(2000);  
+      return;
+    }
+    else{
+      
+    }
+  }
+  
+  delay(2000);  
 }
