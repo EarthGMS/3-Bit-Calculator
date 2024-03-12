@@ -1,6 +1,8 @@
 /*3-Bit Calculator Project
 Made by : Pongsapat Boonpong
-
+Purpose : To study about binary addition and subtraction
+Version : v1.0
+Finish date : TBD
 */
 
 byte Base10Sum1;
@@ -15,13 +17,13 @@ int Input3 = 4;
 int Input4 = 5;
 int Input5 = 6;
 int Input6 = 7;
-*/
 
 //Output pins
 int Output1 = 8;
 int Output2 = 9;
 int Output3 = 10;
 int Output4 = 11;
+*/
 
 //Modes
 int SummaryMode = 12;
@@ -36,11 +38,12 @@ void setup() {
   pinMode(input4, INPUT);
   pinMode(input5, INPUT);
   pinMode(input6, INPUT);
-  */
+  
   pinMode(Output1, OUTPUT);
   pinMode(Output2, OUTPUT); 
   pinMode(Output3, OUTPUT); 
   pinMode(Output4, OUTPUT); 
+  */
 
   pinMode(SummaryMode, INPUT); 
   pinMode(SubtractMode, INPUT); 
@@ -56,16 +59,19 @@ void loop() {
   }
 
   //Show results on serial monitor
-  Serial.print("Set 1 : " + Base10Sum1);
-  Serial.print("Set 2 : " + Base10Sum2);
+  char buffer[40];
+   sprintf(buffer,"Set 1 : %i", Base10Sum1);
+   Serial.print(buffer);
+   sprintf(buffer,"Set 2 : %i", Base10Sum2);
+   Serial.print(buffer);
 
   //Select mode
-  if (digitalRead(SummaryMode == 1){
-    Serial.print("Mode : Summation")
+  if (digitalRead(SummaryMode == 1)){
+    Serial.println("Mode : Summation");
     Mode = true;
   }
-  else if (digitalRead(SubtractMode == 1){
-    Serial.print("Mode : Subtraction")
+  else if (digitalRead(SubtractMode == 1)){
+    Serial.println("Mode : Subtraction");
     Mode = false;
   }
 
@@ -73,8 +79,16 @@ void loop() {
   if (Mode == true){
    //Calculation summmation 
    Base10Result = Base10Sum1 + Base10Sum2;
-   Serial.print("Summation result : " + Base10Result);
-   
+   char buffer[40];
+   sprintf(buffer,"Summation result : %i", Base10Result);
+   Serial.print(buffer);
+   for (int i = 0; i <= 3; i++){
+          if (Base10Result <= 0){
+            break;
+          }
+          digitalWrite(i, Base10Result%2);
+          Base10Result /= 2;
+       }
   }
   else{
     //Calculate subtraction  
@@ -85,7 +99,13 @@ void loop() {
       return;
     }
     else{
-      
+       for (int i = 0; i <= 3; i++){
+          if (Base10Result <= 0){
+            break;
+          }
+          digitalWrite(i+8, Base10Result%2);
+          Base10Result /= 2;
+       }
     }
   }
   
