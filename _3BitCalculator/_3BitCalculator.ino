@@ -1,104 +1,93 @@
-/*3-Bit Calculator Project
+ /*3-Bit Calculator Project
 Made by : Pongsapat Boonpong
 Purpose : To study about binary addition and subtraction
 Version : v1.0
-Finish date : TBD
+Finish date : V1.0 (25-3-2024)
 */
 
-byte Base10Sum1;
-byte Base10Sum2;
-byte Base10Result;
+int Base10Sum1;
+int Base10Sum2;
+int Base10Result;
 
 /*
-//Input pins
-int Input1 = 2;
-int Input2 = 3;
-int Input3 = 4;
-int Input4 = 5;
-int Input5 = 6;
-int Input6 = 7;
+//Input digital pins
+Input1 = 2;
+Input2 = 3;
+Input3 = 4;
+Input4 = 5;
+Input5 = 6;
+Input6 = 7;
 
-//Output pins
-int Output1 = 8;
-int Output2 = 9;
-int Output3 = 10;
-int Output4 = 11;
+//Output digital pins
+Output1 = 8;
+Output2 = 9;
+Output3 = 10;
+Output4 = 11;
 */
 
 //Modes
-int SummaryMode = 12;
-int SubtractMode = 13;
-bool Mode; //if true = sum mode, if false = subtract mode
+int CheckMode = A0;
 
 void setup() {
-  /*
-  pinMode(input1, INPUT);
-  pinMode(input2, INPUT);
-  pinMode(input3, INPUT);
-  pinMode(input4, INPUT);
-  pinMode(input5, INPUT);
-  pinMode(input6, INPUT);
-  
-  pinMode(Output1, OUTPUT);
-  pinMode(Output2, OUTPUT); 
-  pinMode(Output3, OUTPUT); 
-  pinMode(Output4, OUTPUT); 
-  */
-
-  pinMode(SummaryMode, INPUT); 
-  pinMode(SubtractMode, INPUT); 
-
+  Serial.begin(115200);
+  pinMode(CheckMode, INPUT); 
 }
 
 void loop() {
-
+  Serial.println(analogRead(A0));
+  for (int i = 8; i <= 11; i++){
+    digitalWrite(i, LOW);
+  }
   //Get input from the calculator
   for (int i = 0; i <= 2; i++){
-    Base10Sum1 += digitalRead(i+2)^i;
-    Base10Sum2 += digitalRead(i+5)^i;
+    if (digitalRead(i+2) == 1){
+      Base10Sum1 += round(pow(2,i));
+      //Serial.println(pow(2,i));
+    }
+    if (digitalRead(i+5) == 1){
+      Base10Sum2 += round(pow(2,i));
+    }
   }
 
   //Show results on serial monitor
   char buffer[40];
    sprintf(buffer,"Set 1 : %i", Base10Sum1);
-   Serial.print(buffer);
+   Serial.println(buffer);
    sprintf(buffer,"Set 2 : %i", Base10Sum2);
-   Serial.print(buffer);
-
-  //Select mode
-  if (digitalRead(SummaryMode == 1)){
-    Serial.println("Mode : Summation");
-    Mode = true;
-  }
-  else if (digitalRead(SubtractMode == 1)){
-    Serial.println("Mode : Subtraction");
-    Mode = false;
-  }
+   Serial.println(buffer);
 
   //Calculation
-  if (Mode == true){
+  if (analogRead(CheckMode) >= 1){
    //Calculation summmation 
+   Serial.println("Mode : Summation");
    Base10Result = Base10Sum1 + Base10Sum2;
    char buffer[40];
    sprintf(buffer,"Summation result : %i", Base10Result);
-   Serial.print(buffer);
+   Serial.println(buffer);
    for (int i = 0; i <= 3; i++){
           if (Base10Result <= 0){
             break;
           }
-          digitalWrite(i, Base10Result%2);
+          digitalWrite(i+8, Base10Result%2);
           Base10Result /= 2;
        }
   }
   else{
     //Calculate subtraction  
+    Serial.println("Mode : Subtraction");
     Base10Result = Base10Sum1 - Base10Sum2;
-    Serial.print("Subtraction result : " + Base10Result);
     if (Base10Result < 0){
+      Serial.println("Subtraction invalid");
+      Base10Sum1 = 0;
+      Base10Sum2 = 0;
+      Base10Result = 0;
       delay(2000);  
       return;
     }
     else{
+      char buffer[40];
+      sprintf(buffer,"Subtraction result : %i", Base10Result);
+      Serial.println(buffer);
        for (int i = 0; i <= 3; i++){
           if (Base10Result <= 0){
             break;
@@ -108,6 +97,8 @@ void loop() {
        }
     }
   }
-  
+  Base10Sum1 = 0;
+  Base10Sum2 = 0;
+  Base10Result = 0;
   delay(2000);  
 }
