@@ -38,6 +38,7 @@ void loop() {
   for (int i = 8; i <= 11; i++){
     digitalWrite(i, LOW);
   }
+  digitalWrite(13, LOW);
   //Get input from the calculator
   for (int i = 0; i <= 2; i++){
     if (digitalRead(i+2) == 1){
@@ -77,24 +78,15 @@ void loop() {
     Serial.println("Mode : Subtraction");
     Base10Result = Base10Sum1 - Base10Sum2;
     if (Base10Result < 0){
-      Serial.println("Subtraction invalid");
-      Base10Sum1 = 0;
-      Base10Sum2 = 0;
-      Base10Result = 0;
-      delay(2000);  
-      return;
+      digitalWrite(13, HIGH);
     }
-    else{
-      char buffer[40];
-      sprintf(buffer,"Subtraction result : %i", Base10Result);
-      Serial.println(buffer);
-       for (int i = 0; i <= 3; i++){
-          if (Base10Result <= 0){
-            break;
-          }
-          digitalWrite(i+8, Base10Result%2);
-          Base10Result /= 2;
-       }
+    char buffer[40];
+    sprintf(buffer,"Subtraction result : %i", Base10Result);
+    Serial.println(buffer);
+    abs(Base10Result%2);
+    for (int i = 0; i <= 3; i++){
+       digitalWrite(i+8, Base10Result%2);
+       Base10Result /= 2;
     }
   }
   Base10Sum1 = 0;
