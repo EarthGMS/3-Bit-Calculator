@@ -13,4 +13,6 @@ Features
 -Negative number pin
 -display results in binary and in-screen serial number
 
+You can use this project feely as long as it's not for bad purposes
+
 Creator - P.B.
